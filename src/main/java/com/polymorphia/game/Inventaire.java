@@ -28,10 +28,10 @@ public class Inventaire {
     }
 
     public boolean retirer(Objet o) {
-        if (o instanceof Equipement) return armes.remove(o) || armures.remove(o);
-        if (o instanceof Potion) return potions.remove(o);
-        if (o instanceof Sort) return sorts.remove(o);
-        if (o instanceof Materia) return materias.remove(o);
+        if (o instanceof Equipement) return armes.remove((Equipement)o) || armures.remove((Equipement)o);
+        if (o instanceof Potion) return potions.remove((Potion)o);
+        if (o instanceof Sort) return sorts.remove((Sort)o);
+        if (o instanceof Materia) return materias.remove((Materia)o);
         return false;
     }
 
@@ -47,5 +47,21 @@ public class Inventaire {
     public boolean depenserMonnaie(int qte) {
         if (monnaie >= qte) { monnaie -= qte; return true; }
         return false;
+    }
+
+    // Récupère et retire la première potion disponible (ou null)
+    public Potion consommerPremierePotion() {
+        if (!potions.isEmpty()) {
+            return potions.remove(0);
+        }
+        return null;
+    }
+
+    // Affiche un résumé de l'inventaire (console)
+    public void afficherRésumé() {
+        System.out.println("--- Inventaire ---");
+        System.out.println("Monnaie: " + monnaie);
+        System.out.println("Armes: " + armes.size() + ", Armures: " + armures.size());
+        System.out.println("Potions: " + potions.size() + ", Sorts: " + sorts.size() + ", Materia: " + materias.size());
     }
 }

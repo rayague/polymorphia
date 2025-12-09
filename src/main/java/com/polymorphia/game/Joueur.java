@@ -11,6 +11,7 @@ public class Joueur {
     private int niveau;
     private Inventaire inventaire;
     private Equipement equipementCourant;
+    private int experience;
 
     public Joueur(String nom, int pv, int attaque, int defense) {
         this.nom = nom;
@@ -19,6 +20,7 @@ public class Joueur {
         this.defense = defense;
         this.niveau = 1;
         this.inventaire = new Inventaire();
+        this.experience = 0;
     }
 
     public String getNom() { return nom; }
@@ -26,6 +28,25 @@ public class Joueur {
 
     public void perdrePV(int points) { pv = Math.max(0, pv - points); }
     public void gagnerPV(int points) { pv += points; }
+
+    public boolean estVivant() { return pv > 0; }
+
+    public int getAttaque() { return attaque; }
+    public int getDefense() { return defense; }
+
+    // Ajouter de l'expérience et gérer le niveau (simplifié)
+    public void ajouterExperience(int xp) {
+        experience += xp;
+        while (experience >= niveau * 10) {
+            experience -= niveau * 10;
+            niveau++;
+            // amélioration des stats lors du niveau
+            attaque += 2;
+            defense += 1;
+            pv += 5;
+            System.out.println(nom + " a atteint le niveau " + niveau + " !");
+        }
+    }
 
     public void attaquer(Monstre m) {
         // Dégâts simplifiés: attaque du joueur moins défense du monstre
@@ -41,4 +62,9 @@ public class Joueur {
     }
 
     public Inventaire getInventaire() { return inventaire; }
+
+    @Override
+    public String toString() {
+        return nom + " (PV:" + pv + ", ATK:" + attaque + ", DEF:" + defense + ", LVL:" + niveau + ")";
+    }
 }
