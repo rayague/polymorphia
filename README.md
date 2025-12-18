@@ -20,20 +20,39 @@ et comment démarrer/étendre le projet. Tout est rédigé en français pour le 
 	- `src/main/java/com/polymorphia/game/Monstre.java` : modèle de monstre (PV, attaque, défense, récompense).
 	- `src/main/java/com/polymorphia/game/MonstreFactory.java` : usine pour créer des monstres aléatoires.
 	- `src/main/java/com/polymorphia/game/Marchand.java` : stock et ventes d'objets.
-	- `src/main/java/com/polymorphia/game/Serveur.java` et `Client.java` : squelettes pour la partie multijoueur (à étendre).
+	- `src/main/java/com/polymorphia/game/ServeurJeu.java` : serveur multijoueur réseau (TCP, port 5555).
+	- `src/main/java/com/polymorphia/game/ClientJeu.java` : client multijoueur pour connexion réseau.
+	- `src/main/java/com/polymorphia/game/Serveur.java` et `Client.java` : squelettes pour la partie multijoueur local.
 
 Architecture logique
 - Le code utilise des objets simples (POJO) pour représenter le domaine (joueur, monstres, objets).
 - L'inventaire contient des listes typées (armes, armures, potions, sorts, materias) et la monnaie (intcoins).
-- `Jeu.java` orchestre l'interface console : menu, commerce, exploration, combat. Les comportements réseau sont séparés
-	dans `Serveur` / `Client` mais ne sont pour l'instant que des placeholders.
+- `Jeu.java` orchestre l'interface console : menu, commerce, exploration, combat PvE et PvP local.
+- **`ServeurJeu.java` et `ClientJeu.java`** : architecture client-serveur TCP pour le multijoueur en réseau (LAN).
+
+Modes de Jeu
+------------
+### **1. Mode Solo (PvE)**
+Combat contre des monstres, commerce, exploration, progression.
+
+### **2. Mode PvP Local**
+Combat entre 2 joueurs sur le même PC (option 7 du menu).
+
+### **3. Mode Multijoueur Réseau (NOUVEAU!)**
+Combat entre 2 joueurs sur des PC différents via réseau local.
+- **Serveur:** `ServeurJeu.java` (écoute port 5555)
+- **Clients:** `ClientJeu.java` (se connectent au serveur)
+- **Voir:** [GUIDE_RAPIDE.md](GUIDE_RAPIDE.md) et [ARCHITECTURE_RESEAU.md](ARCHITECTURE_RESEAU.md)
 
 Comment démarrer (Windows — `cmd.exe`)
 ------------------------------------
+
+### Mode Solo / PvP Local
+
 1) Ouvrez un terminal et placez-vous dans le dossier du projet (contenant `src` et ce `README.md`) :
 
 ```cmd
-cd /d "d:\Corsica\LSTI Corsica\Programmation orientée objet\Polymorphia"
+cd /d "c:\Users\hp\OneDrive\Desktop\polymorphia"
 ```
 
 2) Compiler toutes les classes :
@@ -47,6 +66,24 @@ javac -d out src\main\java\com\polymorphia\game\*.java
 ```cmd
 java -cp out com.polymorphia.game.Jeu
 ```
+
+### Mode Multijoueur Réseau (3 PC requis)
+
+**PC 1 (Serveur):**
+```cmd
+demarrer-serveur.bat
+OU
+java -cp out com.polymorphia.game.ServeurJeu
+```
+
+**PC 2 et PC 3 (Clients):**
+```cmd
+demarrer-client.bat
+OU
+java -cp out com.polymorphia.game.ClientJeu
+```
+
+**Documentation complète:** Voir [GUIDE_RAPIDE.md](GUIDE_RAPIDE.md)
 
 Remarques : si vous utilisez VS Code, ouvrez le dossier `Polymorphia` et installez l'extension Java pour lancer `Jeu` directement.
 
