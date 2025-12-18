@@ -38,6 +38,8 @@ public class Jeu {
         Scanner sc = new Scanner(System.in);
         boolean quitter = false;
         int zoneNiveau = 1; // difficulté progressive
+        int monstresVaincus = 0;
+        int argentGagne = 0;
 
         while (!quitter && joueur.estVivant()) {
             System.out.println();
@@ -62,12 +64,14 @@ public class Jeu {
                 case "2":
                     Monstre m = MonstreFactory.creeMonstreAleatoire(zoneNiveau);
                     System.out.println("Vous rencontrez un " + m.getNom() + " !");
-                    combat(sc, joueur, m);
+                    boolean victoire = combat(sc, joueur, m);
                     if (!joueur.estVivant()) {
                         System.out.println("Vous êtes mort. Fin de la partie.");
                         quitter = true;
-                    } else {
+                    } else if (victoire) {
                         // Après victoire, progression légère
+                        monstresVaincus++;
+                        argentGagne += m.getRecompenseCoins();
                         zoneNiveau++;
                     }
                     break;
@@ -101,6 +105,49 @@ public class Jeu {
         }
 
         sc.close();
+        
+        // AFFICHAGE DU RÉSUMÉ FINAL
+        System.out.println("\n" + "═".repeat(50));
+        System.out.println("║" + " ".repeat(48) + "║");
+        if (joueur.estVivant()) {
+            System.out.println("║" + "          🎉 PARTIE TERMINÉE - VOUS AVEZ SURVÉCU! 🎉".substring(0, 48) + "║");
+        } else {
+            System.out.println("║" + "          ☠️  GAME OVER - VOUS ÊTES MORT  ☠️".substring(0, 48) + "║");
+        }
+        System.out.println("║" + " ".repeat(48) + "║");
+        System.out.println("═".repeat(50));
+        
+        System.out.println("\n📊 STATISTIQUES FINALES:");
+        System.out.println("─".repeat(50));
+        System.out.println("👤 Héros: " + joueur.getNom());
+        System.out.println("❤️  PV finaux: " + joueur.getPV());
+        System.out.println("⚔️  Attaque: " + joueur.getAttaque());
+        System.out.println("🛡️  Défense: " + joueur.getDefense());
+        System.out.println("⭐ Niveau atteint: " + joueur.getNiveau());
+        System.out.println("💰 Intcoins: " + joueur.getInventaire().getMonnaie());
+        System.out.println("\n🏆 ACCOMPLISSEMENTS:");
+        System.out.println("─".repeat(50));
+        System.out.println("🐺 Monstres vaincus: " + monstresVaincus);
+        System.out.println("💵 Argent gagné: " + argentGagne + " intcoins");
+        System.out.println("🗡️  Équipements: " + joueur.getInventaire().getEquipements().size());
+        System.out.println("🧪 Potions: " + joueur.getInventaire().getPotions().size());
+        System.out.println("✨ Sorts: " + joueur.getInventaire().getSorts().size());
+        System.out.println("💎 Materia: " + joueur.getInventaire().getMaterias().size());
+        
+        if (joueur.estVivant()) {
+            System.out.println("\n🌟 " + joueur.getNom() + " restera dans les légendes!");
+            if (monstresVaincus >= 10) {
+                System.out.println("🏅 TITRE GAGNÉ: CHASSEUR LÉGENDAIRE!");
+            } else if (monstresVaincus >= 5) {
+                System.out.println("🏅 TITRE GAGNÉ: CHASSEUR CONFIRMÉ!");
+            } else if (monstresVaincus >= 1) {
+                System.out.println("🏅 TITRE GAGNÉ: CHASSEUR DÉBUTANT!");
+            }
+        } else {
+            System.out.println("\n💀 Le monde de Polymorphia se souviendra de votre courage...");
+        }
+        
+        System.out.println("\n" + "═".repeat(50));
         System.out.println("Merci d'avoir joué à Polymorphia.");
     }
 
@@ -217,8 +264,8 @@ public class Jeu {
         System.out.print("Nom du Joueur 2: ");
         String nom2 = sc.nextLine().trim();
 
-        Joueur j1 = new Joueur(nom1, 150, 12, 6);
-        Joueur j2 = new Joueur(nom2, 150, 12, 6);
+        Joueur j1 = new Joueur(nom1, 50, 12, 6);
+        Joueur j2 = new Joueur(nom2, 50, 12, 6);
 
         // Donner de l'argent et des objets aux deux joueurs
         j1.getInventaire().ajouterMonnaie(100);
@@ -283,22 +330,36 @@ public class Jeu {
             } else if (action.equals("3")) {
                 attaquant.getInventaire().afficherRésumé();
             } else if (action.equals("4")) {
-                System.out.println("\n" + attaquant.getNom() + " abandonne le combat.");
+                System.out.println("\n❌ " + attaquant.getNom() + " abandonne le combat!");
                 attaquant.perdrePV(attaquant.getPV()); // Le joueur perd
                 quitter = true;
+                
+                // Afficher immédiatement le gagnant
+                System.out.println("\n" + "═".repeat(35));
+                System.out.println("🏆 " + defenseur.getNom() + " remporte le combat par abandon!");
+                System.out.println("═".repeat(35));
+                System.out.println("\n" + defenseur.getNom() + " - PV restants: " + defenseur.getPV());
+                System.out.println(attaquant.getNom() + " - ABANDONNÉ");
+                return;
             } else {
                 System.out.println("Action invalide, tour passé.");
                 tourJ1 = !tourJ1;
             }
         }
 
-        System.out.println("\n" + "=".repeat(35));
+        // Affichage du résultat final (si pas abandonné)
+        System.out.println("\n" + "═".repeat(35));
         if (j1.estVivant()) {
             System.out.println("🏆 " + j1.getNom() + " remporte le combat!");
+            System.out.println("═".repeat(35));
+            System.out.println("\n" + j1.getNom() + " - PV restants: " + j1.getPV());
+            System.out.println(j2.getNom() + " - VAINCU");
         } else {
             System.out.println("🏆 " + j2.getNom() + " remporte le combat!");
+            System.out.println("═".repeat(35));
+            System.out.println("\n" + j2.getNom() + " - PV restants: " + j2.getPV());
+            System.out.println(j1.getNom() + " - VAINCU");
         }
-        System.out.println("=".repeat(35));
     }
 
     // Préparation d'un joueur avant le combat PvP
@@ -358,7 +419,7 @@ public class Jeu {
     }
 
     // Combat joueur vs monstre (tour par tour)
-    private static void combat(Scanner sc, Joueur joueur, Monstre m) {
+    private static boolean combat(Scanner sc, Joueur joueur, Monstre m) {
         System.out.println("\n=== COMBAT contre " + m.getNom() + " ===");
         while (joueur.estVivant() && !m.estMort()) {
             System.out.println("\nVotre PV: " + joueur.getPV() + " | " + m.getNom() + " PV: " + m.getPV());
@@ -386,7 +447,7 @@ public class Jeu {
             } else if (a.equals("4")) {
                 if (new java.util.Random().nextBoolean()) {
                     System.out.println("Fuite réussie!");
-                    return;
+                    return false;
                 } else {
                     System.out.println("Fuite échouée, le combat continue.");
                 }
@@ -403,7 +464,7 @@ public class Jeu {
 
         if (!joueur.estVivant()) {
             System.out.println("Vous avez été vaincu...");
-            return;
+            return false;
         }
 
         System.out.println("Monstre vaincu ! Vous gagnez " + m.getRecompenseCoins() + " intcoins.");
@@ -421,5 +482,6 @@ public class Jeu {
         }
         // XP et potentiel montée de niveau
         joueur.ajouterExperience(5);
+        return true;
     }
 }

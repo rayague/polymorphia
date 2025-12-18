@@ -25,6 +25,7 @@ public class Joueur {
 
     public String getNom() { return nom; }
     public int getPV() { return pv; }
+    public int getNiveau() { return niveau; }
 
     public void perdrePV(int points) { pv = Math.max(0, pv - points); }
     public void gagnerPV(int points) { pv += points; }
