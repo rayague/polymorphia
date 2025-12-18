@@ -120,7 +120,8 @@ public class ClientJeu {
         System.out.println("\nActions disponibles:");
         System.out.println("  1) Attaquer");
         System.out.println("  2) Utiliser une potion (+20 PV)");
-        System.out.println("  3) Abandonner");
+        System.out.println("  3) Acheter équipement/armure");
+        System.out.println("  4) Abandonner");
         System.out.print("> ");
         
         String choix = scanner.nextLine().trim();
@@ -131,9 +132,51 @@ public class ClientJeu {
             case "2":
                 return "POTION";
             case "3":
+                return menuAchat();
+            case "4":
                 return "ABANDONNER";
             default:
                 System.out.println("Choix invalide, attaque par défaut.");
+                return "ATTAQUER";
+        }
+    }
+    
+    private String menuAchat() {
+        System.out.println("\n╔════════════════ MARCHAND ════════════════╗");
+        System.out.println("║                                          ║");
+        System.out.println("║  🛡️  ÉQUIPEMENTS DISPONIBLES:            ║");
+        System.out.println("║                                          ║");
+        System.out.println("║  1) Épée en fer      - 30 💰 (+3 ATK)   ║");
+        System.out.println("║  2) Épée en acier    - 50 💰 (+5 ATK)   ║");
+        System.out.println("║  3) Bouclier en bois - 25 💰 (+2 DEF)   ║");
+        System.out.println("║  4) Armure légère    - 40 💰 (+3 DEF)   ║");
+        System.out.println("║  5) Armure lourde    - 70 💰 (+6 DEF)   ║");
+        System.out.println("║  6) Potion           - 15 💰 (+20 PV)   ║");
+        System.out.println("║  7) Annuler l'achat                      ║");
+        System.out.println("║                                          ║");
+        System.out.println("╚══════════════════════════════════════════╝");
+        System.out.print("Votre choix > ");
+        
+        String choix = scanner.nextLine().trim();
+        
+        switch (choix) {
+            case "1":
+                return "ACHETER:EPEE_FER";
+            case "2":
+                return "ACHETER:EPEE_ACIER";
+            case "3":
+                return "ACHETER:BOUCLIER_BOIS";
+            case "4":
+                return "ACHETER:ARMURE_LEGERE";
+            case "5":
+                return "ACHETER:ARMURE_LOURDE";
+            case "6":
+                return "ACHETER:POTION_ACHAT";
+            case "7":
+                System.out.println("Achat annulé.");
+                return "ATTAQUER"; // Par défaut retourne à l'attaque
+            default:
+                System.out.println("Choix invalide, achat annulé.");
                 return "ATTAQUER";
         }
     }

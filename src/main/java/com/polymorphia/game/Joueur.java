@@ -12,6 +12,7 @@ public class Joueur {
     private Inventaire inventaire;
     private Equipement equipementCourant;
     private int experience;
+    private int argent;
 
     public Joueur(String nom, int pv, int attaque, int defense) {
         this.nom = nom;
@@ -21,6 +22,7 @@ public class Joueur {
         this.niveau = 1;
         this.inventaire = new Inventaire();
         this.experience = 0;
+        this.argent = 100; // Argent de départ pour acheter
     }
 
     public String getNom() { return nom; }
@@ -34,6 +36,15 @@ public class Joueur {
 
     public int getAttaque() { return attaque; }
     public int getDefense() { return defense; }
+    public int getArgent() { return argent; }
+    public void ajouterArgent(int montant) { argent += montant; }
+    public boolean retirerArgent(int montant) {
+        if (argent >= montant) {
+            argent -= montant;
+            return true;
+        }
+        return false;
+    }
 
     // Ajouter de l'expérience et gérer le niveau (simplifié)
     public void ajouterExperience(int xp) {

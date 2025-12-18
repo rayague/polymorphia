@@ -101,6 +101,9 @@ public class ServeurJeu {
                 } else if (action.equals("POTION")) {
                     attaquant.gagnerPV(20);
                     diffuserMessage("ACTION:" + attaquant.getNom() + " utilise une potion (+20 PV)");
+                } else if (action.startsWith("ACHETER:")) {
+                    String item = action.substring(8);
+                    traiterAchat(attaquant, item);
                 }
                 
                 tourJ1 = !tourJ1;
@@ -115,6 +118,70 @@ public class ServeurJeu {
             System.err.println("❌ Erreur pendant la partie: " + e.getMessage());
         } finally {
             fermerConnexions();
+        }
+    }
+    
+    private void traiterAchat(Joueur joueur, String item) {
+        int prix = 0;
+        int bonusATK = 0;
+        int bonusDEF = 0;
+        String nomItem = "";
+        boolean estPotion = false;
+        
+        switch (item) {
+            case "EPEE_FER":
+                prix = 30;
+                bonusATK = 3;
+                nomItem = "Épée en fer";
+                break;
+            case "EPEE_ACIER":
+                prix = 50;
+                bonusATK = 5;
+                nomItem = "Épée en acier";
+                break;
+            case "BOUCLIER_BOIS":
+                prix = 25;
+                bonusDEF = 2;
+                nomItem = "Bouclier en bois";
+                break;
+            case "ARMURE_LEGERE":
+                prix = 40;
+                bonusDEF = 3;
+                nomItem = "Armure légère";
+                break;
+            case "ARMURE_LOURDE":
+                prix = 70;
+                bonusDEF = 6;
+                nomItem = "Armure lourde";
+                break;
+            case "POTION_ACHAT":
+                prix = 15;
+                nomItem = "Potion";
+                estPotion = true;
+                break;
+            default:
+                diffuserMessage("ACTION:❌ Article inconnu!");
+                return;
+        }
+        
+        if (joueur.retirerArgent(prix)) {
+            if (estPotion) {
+                joueur.gagnerPV(20);
+                diffuserMessage("ACTION:💰 " + joueur.getNom() + " achète " + nomItem + " pour " + prix + "💰 (+20 PV) - Reste: " + joueur.getArgent() + "💰");
+            } else {
+                Equipement equip = new Equipement(nomItem, prix, bonusATK, bonusDEF);
+                joueur.equiper(equip);
+                diffuserMessage("ACTION:💰 " + joueur.getNom() + " achète " + nomItem + " pour " + prix + "💰");
+                if (bonusATK > 0) {
+                    diffuserMessage("ACTION:⚔️  Attaque augmentée de +" + bonusATK + " (Total: " + joueur.getAttaque() + ")");
+                }
+                if (bonusDEF > 0) {
+                    diffuserMessage("ACTION:🛡️  Défense augmentée de +" + bonusDEF + " (Total: " + joueur.getDefense() + ")");
+                }
+                diffuserMessage("ACTION:💵 Argent restant: " + joueur.getArgent() + "💰");
+            }
+        } else {
+            diffuserMessage("ACTION:❌ " + joueur.getNom() + " n'a pas assez d'argent! (" + joueur.getArgent() + "/" + prix + "💰)");
         }
     }
     

@@ -1,191 +1,278 @@
-Polymorphia — Guide complet du projet
-====================================
+# 🎮 POLYMORPHIA
+### Jeu de Combat RPG Multijoueur en Réseau
 
-Ce fichier décrit l'architecture du projet, le fonctionnement du jeu (mode solo), les interactions possibles
-et comment démarrer/étendre le projet. Tout est rédigé en français pour le TP.
+---
 
-**Archi :**
-- **But du projet :** un petit RPG heroic-fantasy, jouable en console, avec exploration, marchand, combat au tour-par-tour,
-	loot, montée en niveau et une base pour PvP multijoueur.
-- **Langage :** Java (code situé sous `src/main/java/com/polymorphia/game`).
-- **Structure fichiers importants :**
-	- `src/main/java/com/polymorphia/game/Jeu.java` : point d'entrée (menu console, boucle principale).
-	- `src/main/java/com/polymorphia/game/Joueur.java` : modèle du joueur (PV, attaque, défense, niveau, inventaire).
-	- `src/main/java/com/polymorphia/game/Inventaire.java` : gestion des objets du joueur (armes, armures, potions, sorts, materia, monnaie).
-	- `src/main/java/com/polymorphia/game/Objet.java` : classe de base pour tous les objets.
-	- `src/main/java/com/polymorphia/game/Equipement.java` : armes/armures (bonus attaque/défense, amélioration).
-	- `src/main/java/com/polymorphia/game/Potion.java` : potions (soin).
-	- `src/main/java/com/polymorphia/game/Sort.java` : sorts (attaque/défense selon type).
-	- `src/main/java/com/polymorphia/game/Materia.java` : materia, améliore un équipement.
-	- `src/main/java/com/polymorphia/game/Monstre.java` : modèle de monstre (PV, attaque, défense, récompense).
-	- `src/main/java/com/polymorphia/game/MonstreFactory.java` : usine pour créer des monstres aléatoires.
-	- `src/main/java/com/polymorphia/game/Marchand.java` : stock et ventes d'objets.
-	- `src/main/java/com/polymorphia/game/ServeurJeu.java` : serveur multijoueur réseau (TCP, port 5555).
-	- `src/main/java/com/polymorphia/game/ClientJeu.java` : client multijoueur pour connexion réseau.
-	- `src/main/java/com/polymorphia/game/Serveur.java` et `Client.java` : squelettes pour la partie multijoueur local.
+## 📖 Description
 
-Architecture logique
-- Le code utilise des objets simples (POJO) pour représenter le domaine (joueur, monstres, objets).
-- L'inventaire contient des listes typées (armes, armures, potions, sorts, materias) et la monnaie (intcoins).
-- `Jeu.java` orchestre l'interface console : menu, commerce, exploration, combat PvE et PvP local.
-- **`ServeurJeu.java` et `ClientJeu.java`** : architecture client-serveur TCP pour le multijoueur en réseau (LAN).
+**Polymorphia** est un jeu de rôle (RPG) de combat au tour par tour en console. Combattez des monstres, progressez en niveau, achetez des équipements et affrontez vos amis en réseau local !
 
-Modes de Jeu
-------------
-### **1. Mode Solo (PvE)**
-Combat contre des monstres, commerce, exploration, progression.
+### ✨ Modes de Jeu
 
-### **2. Mode PvP Local**
-Combat entre 2 joueurs sur le même PC (option 7 du menu).
+1. **🐉 Mode Solo (PvE)** - Combattez des monstres et progressez
+2. **👥 Mode PvP Local** - Duel sur le même ordinateur
+3. **🌐 Mode Réseau (LAN)** - Jouez contre un ami sur un autre PC !
 
-### **3. Mode Multijoueur Réseau (NOUVEAU!)**
-Combat entre 2 joueurs sur des PC différents via réseau local.
-- **Serveur:** `ServeurJeu.java` (écoute port 5555)
-- **Clients:** `ClientJeu.java` (se connectent au serveur)
-- **Voir:** [GUIDE_RAPIDE.md](GUIDE_RAPIDE.md) et [ARCHITECTURE_RESEAU.md](ARCHITECTURE_RESEAU.md)
+---
 
-Comment démarrer (Windows — `cmd.exe`)
-------------------------------------
+## 🚀 Comment Jouer - Guide Simple
 
-### Mode Solo / PvP Local
+### 🎯 Mode Réseau (2 Joueurs sur 2 PC différents)
 
-1) Ouvrez un terminal et placez-vous dans le dossier du projet (contenant `src` et ce `README.md`) :
+#### **📋 Ce dont vous avez besoin:**
+- 2 ordinateurs sur le même réseau WiFi ou reliés par câble Ethernet
+- Java installé sur les deux PC
+- Les fichiers du jeu sur les deux PC
 
-```cmd
-cd /d "c:\Users\hp\OneDrive\Desktop\polymorphia"
+#### **🔧 Étape 1: Lancer le Serveur (PC 1)**
+
+Double-cliquez sur `demarrer-serveur.bat`
+
+Vous verrez:
+```
+╔═══════════════════════════════════════╗
+║   POLYMORPHIA - SERVEUR MULTIJOUEUR   ║
+╚═══════════════════════════════════════╝
+
+🎮 SERVEUR POLYMORPHIA DÉMARRÉ
+📡 Port: 5555
+🌐 IP: 192.168.1.100    ← Notez cette adresse!
+👥 En attente de 2 joueurs...
 ```
 
-2) Compiler toutes les classes :
+**⚠️ Important:** Notez l'adresse IP affichée (ex: `192.168.1.100`)
 
-```cmd
-javac -d out src\main\java\com\polymorphia\game\*.java
+---
+
+#### **🔧 Étape 2: Connecter les Joueurs (PC 1 et PC 2)**
+
+Sur **chaque PC joueur**, double-cliquez sur `demarrer-client.bat`
+
+Le client vous demandera:
+```
+╔═══════════════════════════════════════╗
+║   POLYMORPHIA - CLIENT MULTIJOUEUR    ║
+╚═══════════════════════════════════════╝
+
+Adresse IP du serveur (ou 'localhost'):
 ```
 
-3) Lancer le jeu (classe principale) :
+**Tapez l'adresse IP du serveur** (celle notée à l'étape 1)
+- Si vous jouez sur le PC serveur, tapez: `localhost`
+- Si vous jouez sur un autre PC, tapez: `192.168.1.100` (l'IP du serveur)
 
-```cmd
+Puis entrez votre nom:
+```
+Entrez votre nom: Ray
+```
+
+---
+
+#### **🔧 Étape 3: Le Combat Commence !**
+
+Dès que 2 joueurs sont connectés, le combat démarre automatiquement !
+
+**À votre tour, vous verrez:**
+```
+┌─────────────────────────────────────┐
+│         C'EST VOTRE TOUR!           │
+└─────────────────────────────────────┘
+💚 Vous (Ray): 50 PV
+💔 Maha: 50 PV
+
+Actions disponibles:
+  1) Attaquer
+  2) Utiliser une potion (+20 PV)
+  3) Acheter équipement/armure
+  4) Abandonner
+>
+```
+
+**Tapez le numéro de votre choix et appuyez sur ENTRÉE**
+
+---
+
+### 🏪 Menu d'Achat (Option 3)
+
+Pendant le combat, vous pouvez acheter des équipements !
+
+```
+╔════════════════ MARCHAND ════════════════╗
+║                                          ║
+║  🛡️  ÉQUIPEMENTS DISPONIBLES:            ║
+║                                          ║
+║  1) Épée en fer      - 30 💰 (+3 ATK)   ║
+║  2) Épée en acier    - 50 💰 (+5 ATK)   ║
+║  3) Bouclier en bois - 25 💰 (+2 DEF)   ║
+║  4) Armure légère    - 40 💰 (+3 DEF)   ║
+║  5) Armure lourde    - 70 💰 (+6 DEF)   ║
+║  6) Potion           - 15 💰 (+20 PV)   ║
+║  7) Annuler l'achat                      ║
+╚══════════════════════════════════════════╝
+```
+
+💰 **Vous commencez avec 100 pièces d'or**
+⚔️ **Les équipements augmentent vos stats immédiatement !**
+
+---
+
+### 🎮 Mode Solo (Entraînement)
+
+Pour jouer seul contre des monstres:
+
+**Windows:**
+```
 java -cp out com.polymorphia.game.Jeu
 ```
 
-### Mode Multijoueur Réseau (3 PC requis)
+**Puis choisissez l'option 1** dans le menu
 
-**PC 1 (Serveur):**
-```cmd
-demarrer-serveur.bat
-OU
-java -cp out com.polymorphia.game.ServeurJeu
+---
+
+## 📦 Installation
+
+### **Prérequis:**
+- Java 11 ou plus récent
+
+### **Vérifier Java:**
+```bash
+java -version
 ```
 
-**PC 2 et PC 3 (Clients):**
-```cmd
-demarrer-client.bat
-OU
-java -cp out com.polymorphia.game.ClientJeu
+### **Compiler le Jeu:**
+```bash
+javac -encoding UTF-8 -d out src\main\java\com\polymorphia\game\*.java
 ```
 
-**Documentation complète:** Voir [GUIDE_RAPIDE.md](GUIDE_RAPIDE.md)
+✅ Si aucune erreur n'apparaît, le jeu est prêt !
 
-Remarques : si vous utilisez VS Code, ouvrez le dossier `Polymorphia` et installez l'extension Java pour lancer `Jeu` directement.
+---
 
-Gameplay (description complète)
---------------------------------
-Le jeu propose un mode solo console complet et une base pour PvP.
+## 🎯 Règles du Jeu
 
-1) État du joueur
-- `Joueur` a : `nom`, `pv` (points de vie), `attaque`, `defense`, `niveau`, `experience` et un `Inventaire`.
-- Monter de niveau augmente automatiquement l'attaque, la défense et les PV (logique simple dans `ajouterExperience`).
+### **Statistiques**
+- **💚 PV (Points de Vie):** Si = 0, vous perdez
+- **⚔️ ATK (Attaque):** Dégâts infligés à l'ennemi
+- **🛡️ DEF (Défense):** Réduit les dégâts reçus
+- **💰 Argent:** Pour acheter des équipements
 
-2) Inventaire et objets
-- `Inventaire` contient : listes d'`Equipement` (armes et armures), `Potion`, `Sort`, `Materia` et un entier `monnaie`.
-- `Equipement` : possède `bonusAttaque` et `bonusDefense` et une méthode `ameliorer(int points)`.
-- `Potion` : possède une valeur de soin ; `utiliser` applique le soin au joueur.
-- `Sort` : peut être de type `ATTAQUE` ou `DEFENSE`; `lancer` applique son effet.
-- `Materia` : applique `appliquer(Equipement e)` pour améliorer un équipement.
+### **Combat**
+- Dégâts = `ATK de l'attaquant - DEF du défenseur` (minimum 1)
+- Chaque joueur commence avec **50 PV** et **100 pièces d'or**
+- Le premier à 0 PV perd
+- Abandonnez avec l'option 4
 
-3) Marchand
-- `Marchand` possède un `stock` (liste d'`Objet`).
-- Méthodes importantes : `afficherStock()`, `chercherParNom(String)`, `vendreParNom(String, Joueur)`.
-- Pour acheter : le joueur choisit exactement le nom de l'objet affiché; le marchand vérifie la monnaie et déplace l'objet dans l'inventaire du joueur.
+### **Stratégies Gagnantes**
+1. 🛡️ **Défense d'abord:** Achetez une armure pour encaisser les coups
+2. ⚔️ **Attaque ensuite:** Augmentez vos dégâts avec une épée
+3. 💊 **Gardez de l'argent:** Pour acheter des potions en urgence
+4. ⏱️ **Timez vos achats:** Achetez au bon moment tactique
 
-4) Exploration et bestiaire
-- `MonstreFactory.creeMonstreAleatoire(int zoneNiveau)` génère un monstre adapté à la zone.
-- Lors d'une exploration (menu), le jeu crée un monstre aléatoire et déclenche le combat.
+---
 
-5) Combat (solo — tour par tour)
-- Boucle de combat : tant que `joueur.estVivant()` et `!monstre.estMort()` :
-	- Le joueur choisit une action : attaquer, utiliser potion ou fuir.
-	- Attaque : `Joueur.attaquer(Monstre)` calcule des dégâts simples = max(0, attaqueJoueur - defenseMonstre) et appelle `Monstre.recevoirDegats(int)`.
-	- Potion : prend la première potion de l'inventaire (`consommerPremierePotion`) et ajoute les PV.
-	- Fuite : chance 50% de réussir; si échec, le combat continue.
-	- Si le monstre est encore vivant, il attaque : `Monstre.attaquer(Joueur)` applique des dégâts au joueur.
-- Après la victoire : le joueur reçoit `getRecompenseCoins()` intcoins et un drop aléatoire possible (potion/materia).
-- XP fixe (par exemple `+5`) et montée de niveau automatique si seuil atteint.
+## 🛠️ Résolution de Problèmes
 
-6) Équipement et materia
-- Pour équiper un `Equipement`, on appelle `Joueur.equiper(Equipement)` qui applique les bonus immédiatement aux stats du joueur.
-- `Materia.utiliser` appliquera `appliquer(Equipement)` si la cible est un équipement (amélioration permanente dans ce modèle).
+### ❌ "Connection refused"
+- ✅ Vérifiez que le serveur est bien lancé
+- ✅ Vérifiez l'adresse IP (faites `ipconfig` dans CMD)
+- ✅ Désactivez le pare-feu Windows temporairement
 
-7) PvP (concept / état actuel)
-- L'objectif du TP est d'ajouter un mode multijoueur PvP : deux joueurs connectés à un `Serveur` s'affrontent en combat tour-par-tour.
-- `Serveur.java` et `Client.java` sont présents comme squelettes. Ils devront être complétés pour utiliser des sockets (ou RMI) :
-	- Serveur : accepter deux connexions, synchroniser tours, relayer actions.
-	- Client : envoyer actions (attaquer, utiliser potion, équiper) et recevoir états mis à jour.
-- PvP est pour l'instant notifié dans le menu, mais non implémenté.
+### ❌ Le client ne trouve pas le serveur
+- ✅ Les 2 PC doivent être sur le **même réseau WiFi**
+- ✅ Notez bien l'IP affichée par le serveur
+- ✅ Utilisez `localhost` si vous jouez sur le PC serveur
 
-Interaction détaillée (scénarios pas-à-pas)
----------------------------------------
-1) Commerce (achat d'un objet)
-- Le joueur choisit `1) Commercer` dans le menu.
-- Le marchand affiche tout son `stock` avec le nom et le prix.
-- Le joueur entre le nom exact de l'objet affiché.
-- `Marchand.vendreParNom(nom, joueur)` est appelé :
-	- vérifie existence, vérifie `Inventaire.despenderMonnaie(prix)`;
-	- enlève l'objet du stock et appelle `Inventaire.ajouter(objet)`.
-	- renvoie succès/échec (manque d'intcoins ou objet introuvable).
+### ❌ "Cannot find symbol" lors de la compilation
+```bash
+# Utilisez ceci pour compiler avec le bon encodage:
+javac -encoding UTF-8 -d out src\main\java\com\polymorphia\game\*.java
+```
 
-2) Équiper un objet
-- Le menu propose d'équiper la première arme disponible (fonction simplifiée actuelle).
-- `Joueur.equiper(Equipement)` applique `bonusAttaque` et `bonusDefense` aux caractéristiques du joueur.
+### ❌ Le jeu ne répond pas
+- ✅ Vérifiez que vous avez bien appuyé sur **ENTRÉE** après votre choix
+- ✅ Attendez votre tour (regardez qui est affiché en haut)
 
-3) Utiliser une potion
-- Le joueur choisit `Utiliser une potion` ou l'action en combat.
-- `Inventaire.consommerPremierePotion()` retire et renvoie la potion ; `Joueur.gagnerPV(soin)` applique le soin.
+---
 
-4) Utiliser une materia
-- Le joueur applique la materia sur un équipement via `Materia.appliquer(Equipement)`.
-- La materia augmente la valeur `bonusAttaque` / `bonusDefense` de l'équipement.
+## 📂 Structure du Projet
 
-5) Combat PvE (déroulé)
-- Début : affiche PV joueur / PV monstre.
-- Joueur joue (action), puis monstre joue s'il est vivant.
-- Fin : récompenses, loot, XP.
+```
+polymorphia/
+│
+├── 📁 src/main/java/com/polymorphia/game/
+│   ├── 🎮 Jeu.java              # Jeu principal (solo/PvP local)
+│   ├── 🌐 ServeurJeu.java       # Serveur réseau
+│   ├── 💻 ClientJeu.java        # Client réseau
+│   ├── 👤 Joueur.java           # Gestion du joueur
+│   ├── 👹 Monstre.java          # Ennemis
+│   ├── 🏭 MonstreFactory.java   # Création de monstres
+│   ├── 🎒 Inventaire.java       # Gestion inventaire
+│   ├── 🏪 Marchand.java         # Boutique
+│   ├── ⚔️ Equipement.java       # Armes et armures
+│   ├── 💊 Potion.java           # Potions de soin
+│   ├── ✨ Sort.java             # Sorts magiques
+│   ├── 💎 Materia.java          # Materia (buffs)
+│   └── 📦 Objet.java            # Classe de base
+│
+├── 📁 out/                      # Fichiers compilés
+├── 🚀 demarrer-serveur.bat      # Lance le serveur
+├── 🚀 demarrer-client.bat       # Lance le client
+├── 📝 pom.xml                   # Configuration Maven
+└── 📖 README.md                 # Ce fichier
+```
 
-Exécution et exemple de session
---------------------------------
-- Après compilation (`javac ...`), lancer `java -cp out com.polymorphia.game.Jeu`.
-- Exemple d'actions typiques :
-	- `1` pour commercer → tapez `Epée basique` pour acheter (si vous avez assez de monnaie).
-	- `2` pour explorer → combat aléatoire contre un monstre.
-	- Pendant le combat : `1` attaquer, `2` utiliser potion, `3` tenter de fuir.
+---
 
-Conseils pour le développement / extension
-----------------------------------------
-- Rendre le marchand capable de sérialiser/désérialiser son stock, ou charger depuis un fichier JSON/CSV.
-- Remplacer les prints par un logger pour mieux tester.
-- Implémenter PvP : utiliser `ServerSocket` / `Socket` pour la communication basique ; sérialiser les messages (JSON simple).
-- Ajouter un `pom.xml` (Maven) ou `build.gradle` pour gérer la compilation et l'exécution plus proprement.
-- Ajouter des tests unitaires (JUnit) pour la logique de combat (`Joueur.attacker`, `Monstre.recevoirDegats`, `Inventaire`).
+## 🔧 Technologies Utilisées
 
-Fichiers UML et rendu
----------------------
-- Joignez vos diagrammes UML (photo/PDF) au dépôt racine. Nommez le fichier `UML.pdf` (ou `UML.png`).
-- Ajoutez un fichier `CONTRIBUTORS.md` listant les noms du binôme et la répartition du travail.
+| Technologie | Usage |
+|-------------|-------|
+| **Java 11+** | Langage principal |
+| **Java Sockets (TCP)** | Communication réseau |
+| **Port 5555** | Port de communication |
+| **Maven** | Gestion de build |
 
-Contact / Suite
-----------------
-- Si vous voulez que j'implémente immédiatement :
-	- le PvP réseau (serveur + client en sockets), ou
-	- un `pom.xml` et tests JUnit,
-	dites-moi lequel et je l'ajoute.
+---
 
-Bonne continuation — si vous voulez, je complète `Serveur`/`Client` pour faire un vrai PvP local maintenant.
+## 💡 Conseils pour Bien Jouer
+
+### 🏆 Stratégie Débutant (100 💰)
+1. Achetez **Bouclier en bois** (25💰) pour la défense
+2. Achetez **Épée en fer** (30💰) pour l'attaque
+3. Gardez 45💰 pour 3 potions d'urgence
+
+### 🏆 Stratégie Équilibrée (100 💰)
+1. Achetez **Armure légère** (40💰)
+2. Achetez **Épée en fer** (30💰)
+3. Gardez 30💰 pour 2 potions
+
+### 🏆 Stratégie Agressive (100 💰)
+1. Achetez **Épée en acier** (50💰) directement
+2. Achetez **Bouclier en bois** (25💰)
+3. Gardez 25💰 de réserve
+
+---
+
+## 👥 Auteurs
+
+**Créé par:**
+- **Ray Ague** 🎮
+- **Maha Sabbar** 💻
+
+---
+
+## 📜 Licence
+
+Projet éducatif - Libre d'utilisation et de modification
+
+---
+
+## 🎉 Amusez-vous bien !
+
+**⚔️ Que le meilleur guerrier gagne ! 🏆**
+
+---
+
+**Version:** 1.0  
+**Date:** Décembre 2025  
+**Langage:** Java 11+
