@@ -59,9 +59,40 @@ public class Inventaire {
 
     // Affiche un résumé de l'inventaire (console)
     public void afficherRésumé() {
-        System.out.println("--- Inventaire ---");
-        System.out.println("Monnaie: " + monnaie);
-        System.out.println("Armes: " + armes.size() + ", Armures: " + armures.size());
-        System.out.println("Potions: " + potions.size() + ", Sorts: " + sorts.size() + ", Materia: " + materias.size());
+        System.out.println("\n=== INVENTAIRE ===");
+        System.out.println("Intcoins: " + monnaie);
+        
+        System.out.println("\n--- Armes (" + armes.size() + ") ---");
+        for (int i = 0; i < armes.size(); i++) {
+            Equipement e = armes.get(i);
+            System.out.println("  " + (i+1) + ") " + e.getNom() + " (ATK:+" + e.getBonusAttaque() + ", DEF:+" + e.getBonusDefense() + ")");
+        }
+        
+        System.out.println("\n--- Armures (" + armures.size() + ") ---");
+        for (int i = 0; i < armures.size(); i++) {
+            Equipement e = armures.get(i);
+            System.out.println("  " + (i+1) + ") " + e.getNom() + " (ATK:+" + e.getBonusAttaque() + ", DEF:+" + e.getBonusDefense() + ")");
+        }
+        
+        System.out.println("\n--- Potions (" + potions.size() + ") ---");
+        for (int i = 0; i < potions.size(); i++) {
+            System.out.println("  " + (i+1) + ") " + potions.get(i).getNom() + " (Soin: " + potions.get(i).getSoin() + " PV)");
+        }
+        
+        System.out.println("\n--- Sorts (" + sorts.size() + ") ---");
+        for (int i = 0; i < sorts.size(); i++) {
+            Sort s = sorts.get(i);
+            System.out.println("  " + (i+1) + ") " + s.getNom() + " (" + s.getType() + ", Puissance: " + s.getPuissance() + ")");
+        }
+        
+        System.out.println("\n--- Materia (" + materias.size() + ") ---");
+        for (int i = 0; i < materias.size(); i++) {
+            System.out.println("  " + (i+1) + ") " + materias.get(i).getNom() + " (+" + materias.get(i).getPointsAmelioration() + " points)");
+        }
+        System.out.println("==================");
     }
+    
+    public List<Potion> getPotions() { return potions; }
+    public List<Sort> getSorts() { return sorts; }
+    public List<Materia> getMaterias() { return materias; }
 }

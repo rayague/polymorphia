@@ -1,6 +1,7 @@
 package com.polymorphia.game;
 
-/**n+ * Représente un monstre ennemi.
+/**
+ * Représente un monstre ennemi.
  */
 public class Monstre {
     private String nom;
@@ -23,7 +24,7 @@ public class Monstre {
     public int getPV() { return pv; }
 
     public void attaquer(Joueur j) {
-        int degats = Math.max(0, attaque - 0); // simplifié
+        int degats = Math.max(1, attaque - j.getDefense());
         j.perdrePV(degats);
     }
 

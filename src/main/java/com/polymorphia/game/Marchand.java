@@ -14,10 +14,16 @@ public class Marchand {
     // Initialise un stock d'objets basique selon le niveau du joueur
     public void initStockPourNiveau(int niveau) {
         stock.clear();
-        stock.add(new Equipement("Epée basique", 10 + niveau*2, 3 + niveau, 0));
+        stock.add(new Equipement("Épée basique", 10 + niveau*2, 3 + niveau, 0));
+        stock.add(new Equipement("Hache de guerre", 15 + niveau*3, 5 + niveau, 0));
         stock.add(new Equipement("Bouclier simple", 8 + niveau*2, 0, 2 + niveau));
+        stock.add(new Equipement("Armure de cuir", 12 + niveau*2, 0, 3 + niveau));
         stock.add(new Potion("Potion de soin", 5 + niveau, 10 + niveau*2));
+        stock.add(new Potion("Grande potion", 10 + niveau*2, 25 + niveau*3));
+        stock.add(new Sort("Boule de feu", 20 + niveau*5, 15 + niveau*2, Sort.Type.ATTAQUE));
+        stock.add(new Sort("Éclair", 25 + niveau*5, 20 + niveau*2, Sort.Type.ATTAQUE));
         stock.add(new Materia("Materia mineure", 12 + niveau*3, 2 + niveau));
+        stock.add(new Materia("Materia supérieure", 25 + niveau*5, 5 + niveau*2));
     }
 
     public void afficherStock() {
